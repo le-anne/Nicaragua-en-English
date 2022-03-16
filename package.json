@@ -1,0 +1,18 @@
+{
+  "name": "api-tests",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "author": "Leanne Harris",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.4",
+    "cheerio": "^1.0.0-rc.10",
+    "express": "^4.17.1",
+    "node": "^14.17.6",
+    "nodemon": "^2.0.15"
+  },
+  "description": ""
+}
