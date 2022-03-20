@@ -6,18 +6,73 @@ const app = express();
 
 const newspapers = [
   {
-    name: "Google",
-    address: "https://thehill.com/opinion/international",
+    name: "Al Jazeera",
+    address: "https://www.aljazeera.com/where/nicaragua/",
     base: "",
   },
   {
-    name: "NCR",
-    address: "https://www.ncronline.org/news/people",
+    name: "AP News",
+    address: "https://apnews.com/hub/nicaragua",
     base: "",
   },
   {
-    name: "guardian",
+    name: "The Guardian",
     address: "https://www.theguardian.com/world/nicaragua",
+    base: "",
+  },
+  {
+    name: "Independent",
+    address: "https://www.independent.co.uk/topic/nicaragua",
+    base: "",
+  },
+  {
+    name: "BBC",
+    address: "https://www.bbc.com/news/topics/cdl8n2ede8zt/nicaragua",
+    base: "",
+  },
+  {
+    name: "France24",
+    address: "https://www.france24.com/en/tag/nicaragua/",
+    base: "",
+  },
+  {
+    name: "Euronews",
+    address: "https://www.euronews.com/news/america/nicaragua",
+    base: "",
+  },
+  {
+    name: "US News",
+    address: "https://www.usnews.com/topics/locations/nicaragua",
+    base: "",
+  },
+  {
+    name: "Costa Rica Star News",
+    address: "https://news.co.cr/nicaragua-news/",
+    base: "",
+  },
+  {
+    name: "Deutsche Welle (DW)",
+    address: "https://www.dw.com/en/nicaragua/t-18943648",
+    base: "",
+  },
+  {
+    name: "UNESCO",
+    address: "https://en.unesco.org/countries/nicaragua/news",
+    base: "",
+  },
+  {
+    name: "National Post",
+    address: "https://nationalpost.com/tag/nicaragua/",
+    base: "",
+  },
+  {
+    name: "Amnesty",
+    address: "https://www.amnesty.org/en/latest/news/?qlocation=1793",
+    base: "",
+  },
+  {
+    name: "Today Nicaragua",
+    address: "https://todaynicaragua.com/",
     base: "",
   },
 ];
@@ -29,7 +84,7 @@ newspapers.forEach((newspaper) => {
     const html = response.data;
     const $ = cheerio.load(html);
 
-    $('a:contains("nicaragua")', html).each(function () {
+    $('a:contains("Nicaragua")', html).each(function () {
       const title = $(this).text();
       const url = $(this).attr("href");
 
