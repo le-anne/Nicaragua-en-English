@@ -6,17 +6,17 @@ const app = express();
 
 const newspapers = [
   {
-    name: "Al Jazeera",
+    name: "AlJazeera",
     address: "https://www.aljazeera.com/where/nicaragua/",
     base: "",
   },
   {
-    name: "AP News",
+    name: "APNews",
     address: "https://apnews.com/hub/nicaragua",
     base: "",
   },
   {
-    name: "The Guardian",
+    name: "TheGuardian",
     address: "https://www.theguardian.com/world/nicaragua",
     base: "",
   },
@@ -41,17 +41,17 @@ const newspapers = [
     base: "",
   },
   {
-    name: "US News",
+    name: "USNews",
     address: "https://www.usnews.com/topics/locations/nicaragua",
     base: "",
   },
   {
-    name: "Costa Rica Star News",
+    name: "CostaRicaStarNews",
     address: "https://news.co.cr/nicaragua-news/",
     base: "",
   },
   {
-    name: "Deutsche Welle (DW)",
+    name: "DW",
     address: "https://www.dw.com/en/nicaragua/t-18943648",
     base: "",
   },
@@ -61,7 +61,7 @@ const newspapers = [
     base: "",
   },
   {
-    name: "National Post",
+    name: "NationalPost",
     address: "https://nationalpost.com/tag/nicaragua/",
     base: "",
   },
@@ -71,7 +71,7 @@ const newspapers = [
     base: "",
   },
   {
-    name: "Today Nicaragua",
+    name: "TodayNicaragua",
     address: "https://todaynicaragua.com/",
     base: "",
   },
