@@ -13,7 +13,7 @@ const newspapers = [
   {
     name: "APNews",
     address: "https://apnews.com/hub/nicaragua",
-    base: "",
+    base: "https://apnews.com",
   },
   {
     name: "TheGuardian",
@@ -23,22 +23,22 @@ const newspapers = [
   {
     name: "Independent",
     address: "https://www.independent.co.uk/topic/nicaragua",
-    base: "",
+    base: "https://www.independent.co.uk",
   },
   {
     name: "BBC",
     address: "https://www.bbc.com/news/topics/cdl8n2ede8zt/nicaragua",
-    base: "",
+    base: "https://www.bbc.com",
   },
   {
     name: "France24",
     address: "https://www.france24.com/en/tag/nicaragua/",
-    base: "",
+    base: "https://www.france24.com",
   },
   {
     name: "Euronews",
     address: "https://www.euronews.com/news/america/nicaragua",
-    base: "",
+    base: "www.euronews.com",
   },
   {
     name: "USNews",
@@ -53,7 +53,7 @@ const newspapers = [
   {
     name: "DW",
     address: "https://www.dw.com/en/nicaragua/t-18943648",
-    base: "",
+    base: "https://www.dw.com/",
   },
   {
     name: "UNESCO",
@@ -63,7 +63,7 @@ const newspapers = [
   {
     name: "NationalPost",
     address: "https://nationalpost.com/tag/nicaragua/",
-    base: "",
+    base: "https://nationalpost.com",
   },
   {
     name: "Amnesty",
