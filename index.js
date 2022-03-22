@@ -115,6 +115,8 @@ app.get("/news/:newspaperId", (req, res) => {
     (newspaper) => newspaper.name == newspaperId
   )[0].base;
 
+console.log(newspaperAddress, newspaperBase);
+
   axios
     .get(newspaperAddress)
     .then((response) => {
@@ -122,7 +124,7 @@ app.get("/news/:newspaperId", (req, res) => {
       const $ = cheerio.load(html);
       const specificArticles = [];
 
-      $('a:contains("nicaragua")', html).each(function () {
+      $('a:contains("Nicaragua")', html).each(function () {
         const title = $(this).text().replace(/\s\s+/g, "");
         const url = $(this).attr("href");
         specificArticles.push({
