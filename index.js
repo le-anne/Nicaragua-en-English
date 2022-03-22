@@ -6,17 +6,17 @@ const app = express();
 
 const newspapers = [
   {
-    name: "AlJazeera",
+    name: "Al Jazeera",
     address: "https://www.aljazeera.com/where/nicaragua/",
     base: "",
   },
   {
-    name: "APNews",
+    name: "AP News",
     address: "https://apnews.com/hub/nicaragua",
     base: "https://apnews.com",
   },
   {
-    name: "TheGuardian",
+    name: "The Guardian",
     address: "https://www.theguardian.com/world/nicaragua",
     base: "",
   },
@@ -41,12 +41,12 @@ const newspapers = [
     base: "www.euronews.com",
   },
   {
-    name: "USNews",
+    name: "US News",
     address: "https://www.usnews.com/topics/locations/nicaragua",
     base: "",
   },
   {
-    name: "CostaRicaStarNews",
+    name: "Costa Rica Star News",
     address: "https://news.co.cr/nicaragua-news/",
     base: "",
   },
@@ -61,7 +61,7 @@ const newspapers = [
     base: "",
   },
   {
-    name: "NationalPost",
+    name: "National Post",
     address: "https://nationalpost.com/tag/nicaragua/",
     base: "https://nationalpost.com",
   },
@@ -71,7 +71,7 @@ const newspapers = [
     base: "",
   },
   {
-    name: "TodayNicaragua",
+    name: "Today Nicaragua",
     address: "https://todaynicaragua.com/",
     base: "",
   },
@@ -85,7 +85,7 @@ newspapers.forEach((newspaper) => {
     const $ = cheerio.load(html);
 
     $('a:contains("Nicaragua")', html).each(function () {
-      const title = $(this).text();
+      const title = $(this).text().replace(/\s\s+/g, "");
       const url = $(this).attr("href");
 
       articles.push({
@@ -123,7 +123,7 @@ app.get("/news/:newspaperId", (req, res) => {
       const specificArticles = [];
 
       $('a:contains("nicaragua")', html).each(function () {
-        const title = $(this).text();
+        const title = $(this).text().replace(/\s\s+/g, "");
         const url = $(this).attr("href");
         specificArticles.push({
           title,
