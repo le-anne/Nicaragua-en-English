@@ -101,8 +101,16 @@ newspapers.forEach((newspaper) => {
     $('a:contains("Nicaragua")', html).each(function () {
       const title = $(this).text().replace(/\s\s+/g, "");
       const url = $(this).attr("href");
-      const image = $('meta[property="og:image"]').attr("content") ||
-      $('meta[property="og:image:url"]').attr("content");
+
+      var str = title;
+      str = str.replace(/(\d+)/g, function (_, num) {
+        return " " + num + " ";
+      });
+      str = str.trim();
+
+      const image =
+        $('meta[property="og:image"]').attr("content") ||
+        $('meta[property="og:image:url"]').attr("content");
 
       articles.push({
         title,
@@ -132,7 +140,7 @@ app.get("/news/:newspaperId", (req, res) => {
     (newspaper) => newspaper.name == newspaperId
   )[0].base;
 
-console.log(newspaperAddress, newspaperBase);
+  console.log(newspaperAddress, newspaperBase);
 
   axios
     .get(newspaperAddress)
