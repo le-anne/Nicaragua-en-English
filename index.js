@@ -113,7 +113,7 @@ newspapers.forEach((newspaper) => {
         $('meta[property="og:image:url"]').attr("content");
 
       articles.push({
-        title,
+        str,
         url: newspaper.base + url,
         source: newspaper.name,
         image: image,
@@ -151,9 +151,15 @@ app.get("/news/:newspaperId", (req, res) => {
 
       $('a:contains("Nicaragua")', html).each(function () {
         const title = $(this).text().replace(/\s\s+/g, "");
+        var str = title;
+        str = str.replace(/(\d+)/g, function (_, num) {
+          return " " + num + " ";
+        });
+        str = str.trim();
+
         const url = $(this).attr("href");
         specificArticles.push({
-          title,
+          str,
           url: newspaperBase + url,
           source: newspaperId,
           image: image,
