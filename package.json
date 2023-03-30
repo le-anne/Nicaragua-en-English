@@ -1,18 +1,27 @@
 {
   "name": "api-tests",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "index.mjs",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "nodemon index.mjs",
+    "build": "netlify-lambda build src"
   },
   "author": "Leanne Harris",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.21.4",
     "cheerio": "^1.0.0-rc.10",
-    "express": "^4.17.1",
+    "esbuild-runner": "^2.2.2",
+    "express": "^4.18.2",
+    "express-promise-router": "^4.1.1",
+    "https-proxy-agent": "^5.0.1",
     "node": "^14.17.6",
+    "node-fetch": "^3.3.1",
     "nodemon": "^2.0.15"
   },
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "netlify-lambda": "^2.0.16"
+  },
+  "type": "module"
 }
