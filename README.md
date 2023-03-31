@@ -1,6 +1,6 @@
 # Nicaragua-en-English
 
-This is an API fetching the latest news in English from Nicaragua. The news sources come from all over the world, ranging from the Guardian, to Al Jazeera, to BBC.
+This is an API fetching the latest news in English from Nicaragua. The news sources come from all over the world, ranging from the Guardian ßto Al Jazeera to BBC.
 
 ---
 ### Technologies Used
