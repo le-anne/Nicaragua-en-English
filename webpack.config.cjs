@@ -13,6 +13,7 @@ module.exports = {
         resourceRegExp: /^fs$/, // Ignore the 'fs' module
       }),
     ],
+    module: {
     rules: [
       // ... other rules
       {
@@ -26,4 +27,5 @@ module.exports = {
         },
       },
     ],
+  },
 };
