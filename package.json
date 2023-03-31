@@ -1,7 +1,7 @@
 {
   "name": "api-tests",
   "version": "1.0.0",
-  "main": "index.mjs",
+  "main": "index.js",
   "scripts": {
     "start": "nodemon index.mjs",
     "build": "webpack --mode production"
