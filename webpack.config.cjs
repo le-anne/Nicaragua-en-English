@@ -12,14 +12,8 @@ module.exports = {
     fs: 'browserify-fs',
     net: 'net-browserify'
   },
-    plugins: [
-      new webpack.IgnorePlugin({
-        resourceRegExp: /^fs$/, // Ignore the 'fs' module
-      }),
-    ],
-    module: {
+  module: {
     rules: [
-      
       // ... other rules
       {
         test: /\.js$/, // Target all .js files
