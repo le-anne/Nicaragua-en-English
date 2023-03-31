@@ -160,6 +160,7 @@ const main = async () => {
     console.log("Request received for /news");
     try {
       res.json(articles);
+      
     } catch (error) {
       console.error("Error in /news route:", error.message);
       res

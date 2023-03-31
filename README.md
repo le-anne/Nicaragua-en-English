@@ -12,4 +12,4 @@ Cheerio for parsing markup
 
 ---
 
-Nicaragua En English caan be downloaded [here](https://rapidapi.com/leannevictoriaharris/api/nicaragua-news-en-english/).
+Nicaragua En English can be downloaded [here](https://rapidapi.com/leannevictoriaharris/api/nicaragua-news-en-english/).
