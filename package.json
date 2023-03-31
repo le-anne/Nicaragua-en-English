@@ -27,6 +27,7 @@
   "description": "",
   "type": "module",
   "devDependencies": {
+    "babel-loader": "^9.1.2",
     "webpack": "^5.77.0"
   }
 }
