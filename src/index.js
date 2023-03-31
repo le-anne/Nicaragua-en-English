@@ -113,7 +113,7 @@ const fetchArticles = async () => {
       $('a:contains("Nicaragua")', html).each(function () {
         const title = $(this).text().replace(/\s\s+/g, "");
         const url = newspaper.base
-          ? newspaper.base + $(this).attr("href")
+          ? $(this).attr("href")
           : $(this).attr("href");
 
         var str = title;
@@ -146,8 +146,6 @@ const fetchArticles = async () => {
       );
     }
   });
-
-  await Promise.all(fetchPromises);
 };
 
 const main = async () => {
@@ -159,10 +157,10 @@ const main = async () => {
   });
 
   app.get("/news", async (req, res) => {
+    console.log("Request received for /news");
     try {
-      console.log("Request received for /news");
-      await fetchArticles();
       res.json(articles);
+      
     } catch (error) {
       console.error("Error in /news route:", error.message);
       res
