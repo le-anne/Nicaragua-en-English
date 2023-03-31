@@ -7,4 +7,10 @@ module.exports = {
     path: path.resolve(__dirname, "dist"),
   },
   mode: "production",
+  resolve: {
+    fallback: {
+      zlib: require.resolve("browserify-zlib"),
+      querystring: require.resolve("querystring-es3"),
+    },
+  },
 };
