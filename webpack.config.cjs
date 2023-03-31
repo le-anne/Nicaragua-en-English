@@ -9,8 +9,10 @@ module.exports = {
     filename: "bundle.js",
   },
     plugins: [
-    new webpack.IgnorePlugin(/^fs$/),
-  ],
+      new webpack.IgnorePlugin({
+        resourceRegExp: /^fs$/, // Ignore the 'fs' module
+      }),
+    ],
     rules: [
       // ... other rules
       {
