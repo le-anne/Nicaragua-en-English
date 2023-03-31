@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.mjs",
-    "build": "webpack --mode production"
+    "build": "webpack --config webpack.config.cjs"
   },
   "author": "Leanne Harris",
   "license": "ISC",
