@@ -20,8 +20,6 @@
     "nodemon": "^2.0.22"
   },
   "description": "",
-  "devDependencies": {
-    "netlify-lambda": "^2.0.16"
-  },
+  "devDependencies": {},
   "type": "module"
 }
