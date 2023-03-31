@@ -4,7 +4,7 @@
   "main": "index.mjs",
   "scripts": {
     "start": "nodemon index.mjs",
-    "build": "build src"
+    "build": "webpack --mode production"
   },
   "author": "Leanne Harris",
   "license": "ISC",
@@ -23,5 +23,9 @@
     "node": "18.x"
   },
   "description": "",
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "webpack": "^5.77.0",
+    "webpack-cli": "^5.0.1"
+  }
 }
