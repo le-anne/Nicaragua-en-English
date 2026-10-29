@@ -9,7 +9,7 @@ const newspapers = [
   {
     name: "Al Jazeera",
     address: "https://www.aljazeera.com/where/nicaragua/",
-    base: "",
+    base: "https://www.aljazeera.com",
     img: "",
   },
   {
@@ -21,7 +21,7 @@ const newspapers = [
   {
     name: "The Guardian",
     address: "https://www.theguardian.com/world/nicaragua",
-    base: "",
+    base: "https://www.theguardian.com",
     img: "",
   },
   {
@@ -45,31 +45,31 @@ const newspapers = [
   {
     name: "Euronews",
     address: "https://www.euronews.com/news/america/nicaragua",
-    base: "www.euronews.com",
+    base: "https://www.euronews.com",
     img: "",
   },
   {
     name: "US News",
     address: "https://www.usnews.com/topics/locations/nicaragua",
-    base: "",
+    base: "https://www.usnews.com",
     img: "",
   },
   {
     name: "Costa Rica Star News",
     address: "https://news.co.cr/nicaragua-news/",
-    base: "",
+    base: "https://news.co.cr",
     img: "",
   },
   {
     name: "DW",
     address: "https://www.dw.com/en/nicaragua/t-18943648",
-    base: "https://www.dw.com/",
+    base: "https://www.dw.com",
     img: "",
   },
   {
     name: "UNESCO",
-    address: "https://en.unesco.org/countries/nicaragua/news",
-    base: "",
+    address: "https://www.unesco.org/en/countries/ni",
+    base: "https://www.unesco.org",
     img: "",
   },
   {
@@ -81,7 +81,7 @@ const newspapers = [
   {
     name: "Today Nicaragua",
     address: "https://todaynicaragua.com/",
-    base: "",
+    base: "https://todaynicaragua.com",
     img: "",
   },
 ];
@@ -89,14 +89,83 @@ const newspapers = [
 const articles = [];
 
 const axiosInstance = axios.create({
+  timeout: 12000,
+  maxRedirects: 5,
   headers: {
-    "User-Agent": "Mozilla/5.0 (compatible; YourAppName/1.0; your@email.com)",
+    "User-Agent":
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
     Accept:
       "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
     "Accept-Language": "en-US,en;q=0.5",
     Connection: "keep-alive",
   },
 });
+
+const normalizeTitle = (title) =>
+  title
+    .replace(/\s+/g, " ")
+    .replace(/(\d+)/g, " $1 ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+const resolveArticleUrl = (href, pageUrl) => {
+  if (!href || href.startsWith("#") || href.startsWith("javascript:")) {
+    return null;
+  }
+
+  try {
+    return new URL(href, pageUrl).href;
+  } catch {
+    return null;
+  }
+};
+
+const findNewspaper = (newspaperId) => {
+  const decoded = decodeURIComponent(newspaperId || "").trim();
+  const needle = decoded.toLowerCase();
+  const slugNeedle = needle.replace(/[\s_]+/g, "-");
+
+  return newspapers.find((newspaper) => {
+    const name = newspaper.name.toLowerCase();
+    const slug = name.replace(/[\s_]+/g, "-");
+    return name === needle || slug === slugNeedle;
+  });
+};
+
+const scrapeNewspaper = (newspaper, html) => {
+  const $ = cheerioLoad(html);
+  const foundArticles = [];
+  const seen = new Set();
+
+  const image =
+    $('meta[property="og:image"]').attr("content") ||
+    $('meta[property="og:image:url"]').attr("content") ||
+    null;
+
+  $('a:contains("Nicaragua")').each(function () {
+    const title = normalizeTitle($(this).text());
+    const url = resolveArticleUrl($(this).attr("href"), newspaper.address);
+
+    if (!title || title.toLowerCase() === "nicaragua" || !url) {
+      return;
+    }
+
+    const key = `${title}::${url}`;
+    if (seen.has(key)) {
+      return;
+    }
+    seen.add(key);
+
+    foundArticles.push({
+      str: title,
+      url,
+      source: newspaper.name,
+      image,
+    });
+  });
+
+  return foundArticles;
+};
 
 const fetchArticles = async () => {
   console.log("Fetching articles...");
@@ -105,39 +174,11 @@ const fetchArticles = async () => {
   const fetchPromises = newspapers.map(async (newspaper) => {
     try {
       const response = await axiosInstance.get(newspaper.address);
-      const html = response.data;
-      const $ = cheerioLoad(html);
-
-      const foundArticles = [];
-
-      $('a:contains("Nicaragua")', html).each(function () {
-        const title = $(this).text().replace(/\s\s+/g, "");
-        const url = newspaper.base
-          ? newspaper.base + $(this).attr("href")
-          : $(this).attr("href");
-
-        var str = title;
-        str = str.replace(/(\d+)/g, function (_, num) {
-          return " " + num + " ";
-        });
-        str = str.trim();
-
-        const image =
-          $('meta[property="og:image"]').attr("content") ||
-          $('meta[property="og:image:url"]').attr("content");
-
-        foundArticles.push({
-          str,
-          url: newspaper.base + url,
-          source: newspaper.name,
-          image: image,
-        });
-      });
+      const foundArticles = scrapeNewspaper(newspaper, response.data);
 
       console.log(
         `Found ${foundArticles.length} articles for ${newspaper.name}`
       );
-
       articles.push(...foundArticles);
     } catch (error) {
       console.error(
@@ -150,69 +191,51 @@ const fetchArticles = async () => {
   await Promise.all(fetchPromises);
 };
 
-const main = async () => {
-  console.log("Starting main function");
-  await fetchArticles();
+app.get("/", (req, res) => {
+  res.json("Nicaragua News en English");
+});
 
-  app.get("/", (req, res) => {
-    res.json("Nicaragua News en English");
-  });
+app.get("/news", async (req, res) => {
+  console.log("Request received for /news");
+  try {
+    await fetchArticles();
+    res.json(articles);
+  } catch (error) {
+    console.error("Error in /news route:", error.message);
+    res
+      .status(500)
+      .json({ error: "An error has occurred while fetching the news." });
+  }
+});
 
-  app.get("/news", async (req, res) => {
-    try {
-      console.log("Request received for /news");
-      await fetchArticles();
-      res.json(articles);
-    } catch (error) {
-      console.error("Error in /news route:", error.message);
-      res
-        .status(500)
-        .json({ error: "An error has occurred while fetching the news." });
-    }
-  });
+app.get("/news/:newspaperId", async (req, res) => {
+  const newspaper = findNewspaper(req.params.newspaperId);
 
-  app.get("/news/:newspaperId", async (req, res) => {
-    const newspaperId = req.params.newspaperId;
+  if (!newspaper) {
+    return res.status(404).json({
+      error: "Newspaper not found",
+      available: newspapers.map((item) => item.name),
+    });
+  }
 
-    const newspaperAddress = newspapers.filter(
-      (newspaper) => newspaper.name == newspaperId
-    )[0].address;
-    const newspaperBase = newspapers.filter(
-      (newspaper) => newspaper.name == newspaperId
-    )[0].base;
+  console.log(newspaper.address, newspaper.base);
 
-    console.log(newspaperAddress, newspaperBase);
+  try {
+    const response = await axiosInstance.get(newspaper.address);
+    const specificArticles = scrapeNewspaper(newspaper, response.data).map(
+      ({ str, url, source }) => ({ str, url, source })
+    );
+    res.json(specificArticles);
+  } catch (err) {
+    console.log(err.message || err);
+    res
+      .status(500)
+      .json({ error: "An error occurred while fetching the news" });
+  }
+});
 
-    try {
-      const response = await axiosInstance.get(newspaperAddress);
-      const html = response.data;
-      const $ = cheerioLoad(html);
-      const specificArticles = [];
-
-      $('a:contains("Nicaragua")', html).each(function () {
-        const title = $(this).text().replace(/\s\s+/g, "");
-        var str = title;
-        str = str.replace(/(\d+)/g, function (_, num) {
-          return " " + num + " ";
-        });
-        str = str.trim();
-
-        const url = $(this).attr("href");
-
-        specificArticles.push({
-          str,
-          url: newspaperBase + url,
-          source: newspaperId,
-        });
-      });
-      res.json(specificArticles);
-    } catch (err) {
-      console.log(err);
-      res
-        .status(500)
-        .json({ error: "An error occurred while fetching the news" });
-    }
-  });
-};
-main();
 app.listen(PORT, () => console.log(`server running on PORT ${PORT}`));
+
+fetchArticles().catch((error) => {
+  console.error("Initial article fetch failed:", error.message);
+});
