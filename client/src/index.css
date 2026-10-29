@@ -1,0 +1,85 @@
+:root {
+  --ink: #102027;
+  --ink-soft: #4d5c63;
+  --paper: #eef3f4;
+  --paper-deep: #e2eaec;
+  --lake: #0a3d4d;
+  --lake-deep: #062933;
+  --lagoon: #17808a;
+  --signal: #2ec4b6;
+  --mist: rgba(238, 243, 244, 0.9);
+  --line: rgba(16, 32, 39, 0.12);
+  --shadow: 0 24px 60px rgba(6, 41, 51, 0.22);
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "Manrope", "Segoe UI", sans-serif;
+  --radius: 18px;
+  --max: 1120px;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: var(--font-body);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background:
+    radial-gradient(circle at 10% 12%, rgba(46, 196, 182, 0.14), transparent 30%),
+    radial-gradient(circle at 90% 0%, rgba(10, 61, 77, 0.12), transparent 34%),
+    linear-gradient(180deg, #f5f9fa 0%, var(--paper) 45%, #e7eef0 100%);
+  color: var(--ink);
+}
+
+button,
+a {
+  font: inherit;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes ken {
+  from {
+    transform: scale(1.08) translate3d(0, 0, 0);
+  }
+  to {
+    transform: scale(1) translate3d(0, -1.5%, 0);
+  }
+}
+
+@keyframes pulse-soft {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 1;
+  }
+}
