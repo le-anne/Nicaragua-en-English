@@ -4,7 +4,10 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.mjs",
-    "build": "webpack --config webpack.config.cjs --verbose"
+    "build": "webpack --config webpack.config.cjs --verbose",
+    "start:api": "node index.mjs",
+    "start:client": "npm --prefix client run dev",
+    "build:client": "npm --prefix client run build"
   },
   "author": "Leanne Harris",
   "license": "ISC",

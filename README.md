@@ -1,15 +1,29 @@
-# Nicaragua-en-English
+# Nicaragua News en English
 
-This is an API fetching the latest news in English from Nicaragua. The news sources come from all over the world, ranging from the Guardian ßto Al Jazeera to BBC.
+API + frontend that gather English-language Nicaragua headlines from newsrooms around the world.
 
----
-### Technologies Used
-Express for the backend
+## Stack
 
-Axios for API requesting
+- **API** — Express, Axios, Cheerio (`index.mjs`)
+- **Frontend** — Vite + React (`client/`)
 
-Cheerio for parsing markup
+Originally published on [RapidAPI](https://rapidapi.com/leannevictoriaharris/api/nicaragua-news-en-english/). The companion frontend used to live in [nicaraguanews](https://github.com/le-anne/nicaraguanews); this repo now hosts both.
 
----
+## Run locally
 
-Nicaragua En English can be downloaded [here](https://rapidapi.com/leannevictoriaharris/api/nicaragua-news-en-english/).
+```bash
+npm install
+npm run start:api          # http://localhost:8000
+npm run start:client       # http://localhost:5173 (proxies /api → :8000)
+```
+
+### API routes
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/` | Service info |
+| GET | `/news` | All articles (cached ~5 min; `?refresh=1` forces scrape) |
+| GET | `/news/:newspaperId` | One source (`al-jazeera`, `BBC`, …) |
+| GET | `/sources` | Newspaper list |
+
+Each article includes `title`, `str` (legacy), `url`, `source`, and `image`.

@@ -87,6 +87,9 @@ const newspapers = [
 ];
 
 const articles = [];
+let lastFetchAt = 0;
+let fetchInFlight = null;
+const CACHE_TTL_MS = 5 * 60 * 1000;
 
 const axiosInstance = axios.create({
   timeout: 12000,
@@ -99,6 +102,16 @@ const axiosInstance = axios.create({
     "Accept-Language": "en-US,en;q=0.5",
     Connection: "keep-alive",
   },
+});
+
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET,OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(204);
+  }
+  next();
 });
 
 const normalizeTitle = (title) =>
@@ -157,6 +170,7 @@ const scrapeNewspaper = (newspaper, html) => {
     seen.add(key);
 
     foundArticles.push({
+      title,
       str: title,
       url,
       source: newspaper.name,
@@ -168,36 +182,78 @@ const scrapeNewspaper = (newspaper, html) => {
 };
 
 const fetchArticles = async () => {
-  console.log("Fetching articles...");
-  articles.length = 0;
+  if (fetchInFlight) {
+    return fetchInFlight;
+  }
 
-  const fetchPromises = newspapers.map(async (newspaper) => {
-    try {
-      const response = await axiosInstance.get(newspaper.address);
-      const foundArticles = scrapeNewspaper(newspaper, response.data);
+  fetchInFlight = (async () => {
+    console.log("Fetching articles...");
+    const nextArticles = [];
 
-      console.log(
-        `Found ${foundArticles.length} articles for ${newspaper.name}`
-      );
-      articles.push(...foundArticles);
-    } catch (error) {
-      console.error(
-        `Error fetching data from ${newspaper.address}:`,
-        error.message
-      );
-    }
+    const fetchPromises = newspapers.map(async (newspaper) => {
+      try {
+        const response = await axiosInstance.get(newspaper.address);
+        const foundArticles = scrapeNewspaper(newspaper, response.data);
+
+        console.log(
+          `Found ${foundArticles.length} articles for ${newspaper.name}`
+        );
+        nextArticles.push(...foundArticles);
+      } catch (error) {
+        console.error(
+          `Error fetching data from ${newspaper.address}:`,
+          error.message
+        );
+      }
+    });
+
+    await Promise.all(fetchPromises);
+    articles.length = 0;
+    articles.push(...nextArticles);
+    lastFetchAt = Date.now();
+  })().finally(() => {
+    fetchInFlight = null;
   });
 
-  await Promise.all(fetchPromises);
+  return fetchInFlight;
 };
 
 app.get("/", (req, res) => {
-  res.json("Nicaragua News en English");
+  res.json({
+    name: "Nicaragua News en English",
+    endpoints: ["/news", "/sources", "/news/:newspaperId"],
+  });
+});
+
+app.get("/sources", (req, res) => {
+  res.json(
+    newspapers.map(({ name, address }) => ({
+      name,
+      id: name.toLowerCase().replace(/[\s_]+/g, "-"),
+      address,
+    }))
+  );
 });
 
 app.get("/news", async (req, res) => {
   console.log("Request received for /news");
   try {
+    const forceRefresh = req.query.refresh === "1";
+    const cacheFresh =
+      articles.length > 0 && Date.now() - lastFetchAt < CACHE_TTL_MS;
+
+    if (!forceRefresh && cacheFresh) {
+      return res.json(articles);
+    }
+
+    if (!forceRefresh && articles.length > 0) {
+      res.json(articles);
+      fetchArticles().catch((error) => {
+        console.error("Background refresh failed:", error.message);
+      });
+      return;
+    }
+
     await fetchArticles();
     res.json(articles);
   } catch (error) {
@@ -223,7 +279,7 @@ app.get("/news/:newspaperId", async (req, res) => {
   try {
     const response = await axiosInstance.get(newspaper.address);
     const specificArticles = scrapeNewspaper(newspaper, response.data).map(
-      ({ str, url, source }) => ({ str, url, source })
+      ({ title, str, url, source }) => ({ title, str, url, source })
     );
     res.json(specificArticles);
   } catch (err) {
